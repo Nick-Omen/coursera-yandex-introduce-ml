@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import Perceptron
 from sklearn.metrics import accuracy_score
+from utils import save_answer
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 train_data = pd.read_csv(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'train.csv'), header=None)
@@ -47,10 +48,7 @@ def main():
     diff = scaled_ac - default_ac
 
     print('Difference between default and scaled is:', diff)
-    output_file = os.path.join(BASE_DIR, 'answer.txt')
-    with open(output_file, 'w') as file:
-        file.write(str(round(diff, 3)))
-        print('Output written to file `{}`'.format(output_file))
+    save_answer(os.path.join(BASE_DIR, 'answer.txt'), round(diff, 3))
 
 
 if __name__ == '__main__':

@@ -5,8 +5,8 @@ from sklearn.linear_model import Perceptron
 from sklearn.metrics import accuracy_score
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
-train_data = pd.read_csv(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'train.csv'))
-test_data = pd.read_csv(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test.csv'))
+train_data = pd.read_csv(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'train.csv'), header=None)
+test_data = pd.read_csv(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test.csv'), header=None)
 
 
 def train_perceptron(X, y) -> Perceptron:

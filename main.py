@@ -1,7 +1,7 @@
 import os
 import sys
 import getopt
-from subprocess import call
+from importlib import import_module
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 LESSONS_DIR = os.path.join(BASE_DIR, 'lessons')
@@ -23,7 +23,9 @@ def open_lesson(lesson):
             print('----------------------------------')
             print('Lesson #{} running'.format(lesson))
             print('-')
-            call(['python3', os.path.join(LESSONS_DIR, str(lesson), 'main.py')])
+            module_name = 'lessons.{}.main'.format(lesson)
+            m = import_module(module_name, package=__name__)
+            m.run()
             print('----------------------------------')
 
 
@@ -32,7 +34,8 @@ def generate_lesson(lesson):
     if os.path.exists(lesson_root):
         raise Exception('Lesson with #{} already exists!'.format(lesson))
     os.mkdir(lesson_root)
-    open(os.path.join(lesson_root, '__init__.py'), 'a').close()
+    with open(os.path.join(lesson_root, '__init__.py'), 'a') as new_file:
+        new_file.writelines('__all__ = [\'run\']\n')
     with open(os.path.join(lesson_root, 'main.py'), 'w') as new_file:
         with open(os.path.join(TEMPLATES_DIR, 'main.py.lesson.txt'), 'r') as template:
             new_file.writelines(template.readlines())
@@ -49,10 +52,10 @@ def main(argv):
         sys.exit(2)
 
     for option, value in opts:
-        if option == '-g' and int(value):
+        if option == '-g' and value:
             generate_lesson(value)
             return
-        elif option == '-l' and int(value):
+        elif option == '-l' and value:
             open_lesson(value)
             return
         elif option == '-a':
